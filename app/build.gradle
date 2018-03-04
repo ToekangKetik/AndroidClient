@@ -39,8 +39,9 @@ dependencies {
     compile 'com.github.f0ris.sweetalert:library:1.5.1'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.fxn769:oblique:2.0'
-    //compile 'com.midtrans:uikit:1.14.1-SANDBOX'
-    compile 'com.midtrans:uikit:1.11.0-SANDBOX'
+    compile 'net.rimoto:intlphoneinput:1.0.1'
+    compile 'com.midtrans:uikit:1.14.1-SANDBOX'
+   // compile 'com.midtrans:uikit:1.11.0-SANDBOX'
 }
 
 

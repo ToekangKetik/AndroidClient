@@ -25,19 +25,16 @@
             android:text="E-Trash"
             android:textSize="30dp" />
 
-        <android.support.design.widget.TextInputLayout
+        <net.rimoto.intlphoneinput.IntlPhoneInput
+            android:id="@+id/my_phone_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Phone Number"
-                android:inputType="phone" />
-
-        </android.support.design.widget.TextInputLayout>
+            android:layout_height="wrap_content"
+            app:flagPaddingBottom="4dp"
+            app:flagPaddingEnd="4dp"
+            app:flagPaddingStart="4dp"
+            app:flagPaddingTop="4dp"
+            app:textColor="#000000"
+            app:textSize="20sp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -60,7 +57,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/sign_in_email"
+                android:id="@+id/sign_in_phone"
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -44,12 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationBar = findViewById(R.id.bottom_navigation_bar);
-//        nama = (TextView) findViewById(R.id.name);
-//        image = (ImageView) findViewById(R.id.imageView);
-//        logout = (Button) findViewById(R.id.logout);
         mPager = findViewById(R.id.pager);
-//        mPagerAdapter = new FragmentAdapter(getSupportFragmentManager());
-//        mPager.setAdapter(mPagerAdapter);
         bottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.ic_dashboard, "Home"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Order"))
@@ -72,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new HistoryFragment();
                 } else if (position == 4) {
                     selectedFragment = new ProfileFragment();
-                    ShowConfirmLogout();
                 } else {
                     Toast.makeText(MainActivity.this, "Undefined", Toast.LENGTH_LONG).show();
                 }
@@ -98,25 +92,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.pager, new OrderFragment());
         transaction.commit();
-
-
-//        //Get the bundle
-//        Bundle bundle = getIntent().getExtras();
-//
-//        //Extract the data…
-//        param = bundle.getString("email");
-//        param2 = bundle.getString("photo");
-//
-//        nama.setText(param.toString());
-//    if (param2 != null ) {
-//        Uri uri = Uri.parse(param2);
-//        Picasso.with(MainActivity.this)
-//                .load(uri)
-//                .placeholder(android.R.drawable.sym_def_app_icon)
-//                .error(android.R.drawable.sym_def_app_icon)
-//                .into(image);
-//    }
-
 
     }
 

@@ -31,6 +31,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import net.rimoto.intlphoneinput.IntlPhoneInput;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class LoginActivity extends AppCompatActivity {
@@ -42,30 +44,40 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleApiClient mGoogleApiClient;
     private com.google.android.gms.common.SignInButton btnsigningoogle;
     private SweetAlertDialog pDialog;
-    private Button btnsignin_email, verif;
-    private EditText email, pass, phone, code;
+    private Button btnsignin_phone, verif;
+    private EditText code;
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private IntlPhoneInput phone;
+    private String IdLogin = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         btnsigningoogle = findViewById(R.id.sign_in_google);
-        btnsignin_email = findViewById(R.id.sign_in_email);
+        btnsignin_phone = findViewById(R.id.sign_in_phone);
         verif = findViewById(R.id.verif);
-        phone = findViewById(R.id.phone);
+        phone = findViewById(R.id.my_phone_input);
         code = findViewById(R.id.code);
 
+        GetIdLogin();
+        if (IdLogin.equals("1")) {
+            Intent homeIntent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(homeIntent);
+            finish();
+        }
+
+        phone.setDefault();
         pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#135589"));
         pDialog.setTitleText("Loading");
         pDialog.setCancelable(false);
 
         phone.setVisibility(View.VISIBLE);
-        btnsignin_email.setVisibility(View.VISIBLE);
+        btnsignin_phone.setVisibility(View.VISIBLE);
         btnsigningoogle.setVisibility(View.VISIBLE);
         code.setVisibility(View.GONE);
         verif.setVisibility(View.GONE);
@@ -159,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                 mVerificationId = verificationId;
                 mResendToken = token;
                 phone.setVisibility(View.GONE);
-                btnsignin_email.setVisibility(View.GONE);
+                btnsignin_phone.setVisibility(View.GONE);
                 btnsigningoogle.setVisibility(View.GONE);
                 code.setVisibility(View.VISIBLE);
                 verif.setVisibility(View.VISIBLE);
@@ -176,16 +188,24 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        btnsignin_email.setOnClickListener(new View.OnClickListener() {
+        btnsignin_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pDialog.show();
-                PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                        phone.getText().toString(),
-                        60,
-                        java.util.concurrent.TimeUnit.SECONDS,
-                        LoginActivity.this,
-                        mCallbacks);
+                String myInternationalNumber = null;
+                if (phone.isValid()) {
+                    myInternationalNumber = phone.getNumber();
+                    PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                            myInternationalNumber.toString(),
+                            60,
+                            java.util.concurrent.TimeUnit.SECONDS,
+                            LoginActivity.this,
+                            mCallbacks);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Mohon Maaf Untuk Sementara Hanya Melayani Provider Indonesia!!!", Toast.LENGTH_LONG).show();
+                    pDialog.dismiss();
+                }
+
             }
         });
 
@@ -221,6 +241,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
+                pDialog.dismiss();
             }
         }
 
@@ -258,7 +279,9 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            pDialog.dismiss();
                         }
+
                     }
                 });
     }
@@ -270,10 +293,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = task.getResult().getUser();
+                            if (user.getUid() != null) {
+                                Log.d(TAG, "signInWithCredential:success");
+                                StoreInPref("1", user.getUid().toString());
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            Toast.makeText(LoginActivity.this, "Verification Done", Toast.LENGTH_SHORT).show();
-                            pDialog.dismiss();
+                                Toast.makeText(LoginActivity.this, "Verification Done UID -> " + user.getUid(), Toast.LENGTH_LONG).show();
+                                pDialog.dismiss();
+                                finish();
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Terjadi Kesalahan Dalah Get UID!!!", Toast.LENGTH_LONG).show();
+                                pDialog.dismiss();
+                            }
                             // ...
                         } else {
                             // Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -281,6 +312,7 @@ public class LoginActivity extends AppCompatActivity {
                                 // The verification code entered was invalid
                                 Toast.makeText(LoginActivity.this, "Invalid Verification", Toast.LENGTH_SHORT).show();
                             }
+                            pDialog.dismiss();
                         }
                     }
                 });
@@ -297,6 +329,14 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor2 = pref2.edit();
         editor2.putString("UID", token2);
         editor2.commit();
+
+    }
+
+    private void GetIdLogin() {
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.LOGIN, 0);
+        IdLogin = pref.getString("LOGIN", "0");
+
 
     }
 }
