@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">E-Trash</string>
+
+    <string name="hello_blank_fragment1">Hello blank fragment market</string>
+    <string name="hello_blank_fragment2">Hello blank fragment cart</string>
+    <string name="hello_blank_fragment3">Hello blank fragment stock</string>
+    <string name="hello_blank_fragment4">Hello blank fragment history</string>
+    <string name="hello_blank_fragment5">Hello blank fragment profile</string>
 </resources>
