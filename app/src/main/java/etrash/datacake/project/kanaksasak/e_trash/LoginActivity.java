@@ -175,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                 btnsigningoogle.setVisibility(View.GONE);
                 code.setVisibility(View.VISIBLE);
                 verif.setVisibility(View.VISIBLE);
+                pDialog.dismiss();
                 // ...
             }
         };

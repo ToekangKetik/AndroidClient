@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private String param, param2;
     private FrameLayout mPager;
     private PagerAdapter mPagerAdapter;
+    private String LevelUser = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,49 +46,101 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationBar = findViewById(R.id.bottom_navigation_bar);
         mPager = findViewById(R.id.pager);
-        bottomNavigationBar
-                .addItem(new BottomNavigationItem(R.drawable.ic_dashboard, "Home"))
-                .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Order"))
-                .addItem(new BottomNavigationItem(R.drawable.ic_post, "Post"))
-                .addItem(new BottomNavigationItem(R.drawable.ic_history, "History"))
-                .addItem(new BottomNavigationItem(R.drawable.ic_profile, "Profile"))
-                .initialise();
+        LevelUser = "1";
+        if (LevelUser.equals("1")) { // Level Petugas
+            bottomNavigationBar
+                    .addItem(new BottomNavigationItem(R.drawable.ic_dashboard, "List Order"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Cart"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_payment, "Payment"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_history, "History"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_profile, "Profile"))
+                    .initialise();
+            bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(int position) {
+                    Fragment selectedFragment = null;
+                    if (position == 0) {
+                        selectedFragment = new OrderFragment();
+                    } else if (position == 1) {
+                        selectedFragment = new CartFragment();
+                    } else if (position == 2) {
+                        selectedFragment = new PostFragment();
+                    } else if (position == 3) {
+                        selectedFragment = new HistoryFragment();
+                    } else if (position == 4) {
+                        selectedFragment = new ProfileFragment();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Undefined Menu Position!", Toast.LENGTH_LONG).show();
+                    }
 
-        bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(int position) {
-                Fragment selectedFragment = null;
-                if (position == 0) {
-                    selectedFragment = new OrderFragment();
-                } else if (position == 1) {
-                    selectedFragment = new CartFragment();
-                } else if (position == 2) {
-                    selectedFragment = new PostFragment();
-                } else if (position == 3) {
-                    selectedFragment = new HistoryFragment();
-                } else if (position == 4) {
-                    selectedFragment = new ProfileFragment();
-                } else {
-                    Toast.makeText(MainActivity.this, "Undefined", Toast.LENGTH_LONG).show();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.pager, selectedFragment);
+                    transaction.commit();
+
+
                 }
 
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.pager, selectedFragment);
-                transaction.commit();
+                @Override
+                public void onTabUnselected(int position) {
+
+                }
+
+                @Override
+                public void onTabReselected(int position) {
+
+                }
+            });
+        } else if (LevelUser.equals("2")) { // Level Customers
+            bottomNavigationBar
+                    .addItem(new BottomNavigationItem(R.drawable.ic_post, "Order"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Cart"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_payment, "Payment"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_history, "History"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_profile, "Profile"))
+                    .initialise();
+
+            bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(int position) {
+                    Fragment selectedFragment = null;
+                    if (position == 0) {
+                        //selectedFragment = new OrderFragment();
+                        selectedFragment = new PostFragment();
+                    } else if (position == 1) {
+                        selectedFragment = new CartFragment();
+                    } else if (position == 2) {
+                        selectedFragment = new HistoryFragment();
+                    } else if (position == 3) {
+                        selectedFragment = new HistoryFragment();
+                    } else if (position == 4) {
+                        selectedFragment = new ProfileFragment();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Undefined Menu Position!", Toast.LENGTH_LONG).show();
+                    }
+
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.pager, selectedFragment);
+                    transaction.commit();
 
 
-            }
+                }
 
-            @Override
-            public void onTabUnselected(int position) {
+                @Override
+                public void onTabUnselected(int position) {
 
-            }
+                }
 
-            @Override
-            public void onTabReselected(int position) {
+                @Override
+                public void onTabReselected(int position) {
 
-            }
-        });
+                }
+            });
+        } else {
+            Toast.makeText(MainActivity.this, "Undefined Level!", Toast.LENGTH_LONG).show();
+        }
+
+
+
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.pager, new OrderFragment());
