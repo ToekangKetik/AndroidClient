@@ -6,4 +6,7 @@
     <string name="hello_blank_fragment3">Hello blank fragment stock</string>
     <string name="hello_blank_fragment4">Hello blank fragment history</string>
     <string name="hello_blank_fragment5">Hello blank fragment profile</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

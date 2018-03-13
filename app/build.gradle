@@ -26,6 +26,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:11.8.0'
     implementation 'com.google.firebase:firebase-storage:11.8.0'
     implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.android.support:support-v4:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
@@ -41,8 +42,10 @@ dependencies {
     compile 'com.fxn769:oblique:2.0'
     compile 'net.rimoto:intlphoneinput:1.0.1'
     compile 'com.midtrans:uikit:1.14.1-SANDBOX'
-   // compile 'com.midtrans:uikit:1.11.0-SANDBOX'
+    // compile 'com.midtrans:uikit:1.11.0-SANDBOX'
+    implementation 'com.android.support:mediarouter-v7:26.1.0'
 }
+
 
 
 

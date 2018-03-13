@@ -7,19 +7,25 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="Pengaturan"
+        android:title="Setting"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_about"
-        android:orderInCategory="100"
-        android:title="Pembuat APK"
-        app:showAsAction="never" />
-
     <item
         android:id="@+id/logout"
         android:orderInCategory="100"
-        android:title="LOGOUT"
+        android:title="SignOut"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/coin"
+        android:icon="@drawable/ic_coins"
+        android:orderInCategory="300"
+        android:title="Coin"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/qrcode"
+        android:icon="@drawable/ic_qr_code"
+        android:orderInCategory="300"
+        android:title="QrCode"
+        app:showAsAction="always" />
+
 
 </menu>

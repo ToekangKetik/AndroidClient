@@ -5,11 +5,18 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -21,18 +28,24 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileFragment extends Fragment {
 
     private static final int CHOOSING_IMAGE_REQUEST = 1234;
+    private static final String TAG = "FIREBASE LOG";
     protected String param;
     private CircleImageView image, profile_btn;
-    private String mUID;
+    private String mUID, saldo;
     private Uri fileUri;
+    private TextView saldotxt;
+    private DatabaseReference mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseInstance;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_profile, container, false);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_profile, container, false);
         image = rootView.findViewById(R.id.profile_image);
         profile_btn = rootView.findViewById(R.id.profile_btn);
+        saldotxt = rootView.findViewById(R.id.saldotxt);
+
 
         GetIdLogin();
 
@@ -53,6 +66,11 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+        mFirebaseInstance = FirebaseDatabase.getInstance();
+        mFirebaseDatabase = mFirebaseInstance.getReference();
+
+        SaldoFirebase();
 
 
         return rootView;
@@ -80,5 +98,36 @@ public class ProfileFragment extends Fragment {
             fileUri = data.getData();
             Toast.makeText(this.getContext(), "URI : " + fileUri + "", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void SaldoFirebase() {
+        mFirebaseDatabase.child("profile").orderByKey().equalTo("fgawI620T1Rps0mdTPqR0yKaB5b2").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                fetchData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "error!");
+            }
+        });
+    }
+
+    private void fetchData(DataSnapshot dataSnapshot) {
+
+        System.out.println("snap ->" + dataSnapshot);
+
+        for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+            saldo = (String) child.child("saldo").getValue();
+
+            System.out.println("snap ->" + saldo);
+
+
+        }
+
+        saldotxt.setText(saldo);
+
     }
 }

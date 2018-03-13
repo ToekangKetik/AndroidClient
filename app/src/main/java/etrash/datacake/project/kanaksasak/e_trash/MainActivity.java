@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -22,22 +21,19 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import etrash.datacake.project.kanaksasak.e_trash.Fragment.CartFragment;
-import etrash.datacake.project.kanaksasak.e_trash.Fragment.HistoryFragment;
-import etrash.datacake.project.kanaksasak.e_trash.Fragment.OrderFragment;
-import etrash.datacake.project.kanaksasak.e_trash.Fragment.PostFragment;
+import etrash.datacake.project.kanaksasak.e_trash.Fragment.MainMenu;
 import etrash.datacake.project.kanaksasak.e_trash.Fragment.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private static final int NUM_PAGES = 5;
-    TextView nama;
     BottomNavigationBar bottomNavigationBar;
     ImageView image;
     Button logout;
-    private String param, param2;
+    String saldo;
     private FrameLayout mPager;
     private PagerAdapter mPagerAdapter;
-    private String LevelUser = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,56 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationBar = findViewById(R.id.bottom_navigation_bar);
         mPager = findViewById(R.id.pager);
-        LevelUser = "1";
-        if (LevelUser.equals("1")) { // Level Petugas
             bottomNavigationBar
-                    .addItem(new BottomNavigationItem(R.drawable.ic_dashboard, "List Order"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Cart"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_payment, "Payment"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_history, "History"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_profile, "Profile"))
-                    .initialise();
-            bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(int position) {
-                    Fragment selectedFragment = null;
-                    if (position == 0) {
-                        selectedFragment = new OrderFragment();
-                    } else if (position == 1) {
-                        selectedFragment = new CartFragment();
-                    } else if (position == 2) {
-                        selectedFragment = new PostFragment();
-                    } else if (position == 3) {
-                        selectedFragment = new HistoryFragment();
-                    } else if (position == 4) {
-                        selectedFragment = new ProfileFragment();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Undefined Menu Position!", Toast.LENGTH_LONG).show();
-                    }
-
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.pager, selectedFragment);
-                    transaction.commit();
-
-
-                }
-
-                @Override
-                public void onTabUnselected(int position) {
-
-                }
-
-                @Override
-                public void onTabReselected(int position) {
-
-                }
-            });
-        } else if (LevelUser.equals("2")) { // Level Customers
-            bottomNavigationBar
-                    .addItem(new BottomNavigationItem(R.drawable.ic_post, "Order"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Cart"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_payment, "Payment"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_history, "History"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_dashboard, "Dasboard"))
+                    .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Order"))
                     .addItem(new BottomNavigationItem(R.drawable.ic_profile, "Profile"))
                     .initialise();
 
@@ -105,14 +54,10 @@ public class MainActivity extends AppCompatActivity {
                     Fragment selectedFragment = null;
                     if (position == 0) {
                         //selectedFragment = new OrderFragment();
-                        selectedFragment = new PostFragment();
+                        selectedFragment = new MainMenu();
                     } else if (position == 1) {
                         selectedFragment = new CartFragment();
                     } else if (position == 2) {
-                        selectedFragment = new HistoryFragment();
-                    } else if (position == 3) {
-                        selectedFragment = new HistoryFragment();
-                    } else if (position == 4) {
                         selectedFragment = new ProfileFragment();
                     } else {
                         Toast.makeText(MainActivity.this, "Undefined Menu Position!", Toast.LENGTH_LONG).show();
@@ -135,15 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-        } else {
-            Toast.makeText(MainActivity.this, "Undefined Level!", Toast.LENGTH_LONG).show();
-        }
-
-
-
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.pager, new OrderFragment());
+        transaction.replace(R.id.pager, new MainMenu());
         transaction.commit();
 
 
@@ -151,10 +90,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-
+        saldo = "2";
         return true;
     }
 
@@ -167,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Toast.makeText(this, "coba", Toast.LENGTH_SHORT).show();
+            saldo = "6";
         }
         if (id == R.id.logout) {
             ShowConfirmLogout();
@@ -212,5 +152,6 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .show();
     }
+
 
 }
