@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onTabSelected(int position) {
                     Fragment selectedFragment = null;
                     if (position == 0) {
-                        //selectedFragment = new OrderFragment();
                         selectedFragment = new MainMenu();
                     } else if (position == 1) {
                         selectedFragment = new CartFragment();
@@ -77,6 +76,17 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTabReselected(int position) {
+                    Fragment selectedFragment = null;
+                    if (position == 0) {
+                        selectedFragment = new MainMenu();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.pager, selectedFragment);
+                        transaction.commit();
+                    } else {
+//                        Toast.makeText(MainActivity.this, "Undefined Menu Position!", Toast.LENGTH_LONG).show();
+                    }
+
+
 
                 }
             });

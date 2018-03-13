@@ -31,7 +31,7 @@ public class MainMenu extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.menulist);
         MenuList = new ArrayList<>();
-        adapter = new MenuAdapter(this.getContext(), MenuList);
+        adapter = new MenuAdapter(this.getContext(), getFragmentManager(), MenuList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this.getContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);

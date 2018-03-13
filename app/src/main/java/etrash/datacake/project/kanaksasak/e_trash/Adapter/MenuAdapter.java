@@ -1,6 +1,7 @@
 package etrash.datacake.project.kanaksasak.e_trash.Adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +22,14 @@ import etrash.datacake.project.kanaksasak.e_trash.R;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> {
 
+    public FragmentManager f_manager;
     private Context mContext;
     private List<MenuModel> mMenuList;
 
-    public MenuAdapter(Context context, List<MenuModel> menuList) {
-        this.mContext = context;
-        this.mMenuList = menuList;
+    public MenuAdapter(Context mContext, FragmentManager f_manager, List<MenuModel> mMenuList) {
+        this.mContext = mContext;
+        this.f_manager = f_manager;
+        this.mMenuList = mMenuList;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
 
 
     @Override
-    public void onBindViewHolder(MenuAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(MenuAdapter.MyViewHolder holder, final int position) {
         MenuModel menu = mMenuList.get(position);
         holder.title.setText(menu.getTitle());
 
@@ -48,6 +51,14 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
                 .placeholder(R.drawable.profile)
                 .error(R.drawable.profile)
                 .into(holder.icon);
+
+        holder.icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MenuControl obj = new MenuControl(mContext, f_manager);
+                obj.MenuEvent(position);
+            }
+        });
 
     }
 
