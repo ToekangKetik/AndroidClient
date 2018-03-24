@@ -5,18 +5,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -28,14 +24,12 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileFragment extends Fragment {
 
     private static final int CHOOSING_IMAGE_REQUEST = 1234;
-    private static final String TAG = "FIREBASE LOG";
     protected String param;
-    private CircleImageView image, profile_btn;
-    private String mUID, saldo;
+    private CircleImageView image;
+    private ImageView edit_btn;
+    private String mUID, coin;
     private Uri fileUri;
     private TextView saldotxt;
-    private DatabaseReference mFirebaseDatabase;
-    private FirebaseDatabase mFirebaseInstance;
 
 
     @Override
@@ -43,11 +37,12 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_profile, container, false);
         image = rootView.findViewById(R.id.profile_image);
-        profile_btn = rootView.findViewById(R.id.profile_btn);
+        edit_btn = rootView.findViewById(R.id.edit_btn);
         saldotxt = rootView.findViewById(R.id.saldotxt);
 
 
-        GetIdLogin();
+        GetUID();
+        GetCoin();
 
         param = "https://firebasestorage.googleapis.com/v0/b/e-pul-b4984.appspot.com/o/Profile%2FPHuGaTAINvZaxrHRHPd8P4EiyZx2.jpg?alt=media&token=b2d4e050-9636-48db-a57d-8b23bbda5b71";
 
@@ -59,7 +54,7 @@ public class ProfileFragment extends Fragment {
                 .error(R.drawable.profile)
                 .into(image);
 
-        profile_btn.setOnClickListener(new View.OnClickListener() {
+        image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showChoosingFile();
@@ -67,22 +62,22 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        mFirebaseInstance = FirebaseDatabase.getInstance();
-        mFirebaseDatabase = mFirebaseInstance.getReference();
+        edit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.pager, new BlankFragment());
+                transaction.commit();
+            }
+        });
 
-        SaldoFirebase();
+
+        saldotxt.setText(coin);
 
 
         return rootView;
     }
 
-    private void GetIdLogin() {
-
-        SharedPreferences pref = this.getContext().getSharedPreferences(Config.UID, 0);
-        mUID = pref.getString("UID", "0");
-
-
-    }
 
     private void showChoosingFile() {
         Intent intent = new Intent();
@@ -100,34 +95,20 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void SaldoFirebase() {
-        mFirebaseDatabase.child("profile").orderByKey().equalTo("fgawI620T1Rps0mdTPqR0yKaB5b2").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                fetchData(dataSnapshot);
-            }
+    private void GetUID() {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "error!");
-            }
-        });
+        SharedPreferences pref = this.getContext().getSharedPreferences(Config.UID, 0);
+        mUID = pref.getString("UID", "0");
+
+
     }
 
-    private void fetchData(DataSnapshot dataSnapshot) {
+    private void GetCoin() {
 
-        System.out.println("snap ->" + dataSnapshot);
+        SharedPreferences pref = this.getContext().getSharedPreferences(Config.COIN, 0);
+        coin = pref.getString("COIN", "0");
 
-        for (DataSnapshot child : dataSnapshot.getChildren()) {
-
-            saldo = (String) child.child("saldo").getValue();
-
-            System.out.println("snap ->" + saldo);
-
-
-        }
-
-        saldotxt.setText(saldo);
 
     }
+
 }

@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +29,14 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ItemMarketActivity"></activity>
+        <activity android:name=".ItemMarketActivity" />
+
+        <service
+            android:name=".Service.FirebaseService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>

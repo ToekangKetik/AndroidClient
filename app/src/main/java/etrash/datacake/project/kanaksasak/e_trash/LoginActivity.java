@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     if (user.getDisplayName() != null) {
 
-                        StoreInPref("1", user.getUid().toString());
+                        StoreInPref("1", user.getUid().toString(), "");
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         Bundle bundle = new Bundle();
@@ -297,8 +297,8 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = task.getResult().getUser();
                             if (user.getUid() != null) {
                                 Log.d(TAG, "signInWithCredential:success");
-                                StoreInPref("1", user.getUid().toString());
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                StoreInPref("1", user.getUid().toString(), user.getPhoneNumber());
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 Toast.makeText(LoginActivity.this, "Verification Done UID -> " + user.getUid(), Toast.LENGTH_LONG).show();
                                 pDialog.dismiss();
                                 finish();
@@ -320,7 +320,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void StoreInPref(String token, String token2) {
+    private void StoreInPref(String token, String token2, String token3) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.LOGIN, 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("LOGIN", token);
@@ -330,6 +330,11 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor2 = pref2.edit();
         editor2.putString("UID", token2);
         editor2.commit();
+
+        SharedPreferences pref3 = getApplicationContext().getSharedPreferences(Config.HP, 0);
+        SharedPreferences.Editor editor3 = pref3.edit();
+        editor3.putString("HP", token3);
+        editor3.commit();
 
     }
 

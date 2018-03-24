@@ -20,9 +20,10 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.google.firebase.auth.FirebaseAuth;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import etrash.datacake.project.kanaksasak.e_trash.Fragment.CartFragment;
 import etrash.datacake.project.kanaksasak.e_trash.Fragment.MainMenu;
+import etrash.datacake.project.kanaksasak.e_trash.Fragment.PendingOrderFragment;
 import etrash.datacake.project.kanaksasak.e_trash.Fragment.ProfileFragment;
+import etrash.datacake.project.kanaksasak.e_trash.Fragment.UserQRFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationBar bottomNavigationBar;
     ImageView image;
     Button logout;
-    String saldo;
+    String coin;
     private FrameLayout mPager;
     private PagerAdapter mPagerAdapter;
 
@@ -42,54 +43,53 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationBar = findViewById(R.id.bottom_navigation_bar);
         mPager = findViewById(R.id.pager);
-            bottomNavigationBar
-                    .addItem(new BottomNavigationItem(R.drawable.ic_dashboard, "Dasboard"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Order"))
-                    .addItem(new BottomNavigationItem(R.drawable.ic_profile, "Profile"))
-                    .initialise();
+        bottomNavigationBar
+                .addItem(new BottomNavigationItem(R.drawable.ic_dashboard, "Dasboard"))
+                .addItem(new BottomNavigationItem(R.drawable.ic_chart, "Order"))
+                .addItem(new BottomNavigationItem(R.drawable.ic_profile, "Profile"))
+                .initialise();
 
-            bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(int position) {
-                    Fragment selectedFragment = null;
-                    if (position == 0) {
-                        selectedFragment = new MainMenu();
-                    } else if (position == 1) {
-                        selectedFragment = new CartFragment();
-                    } else if (position == 2) {
-                        selectedFragment = new ProfileFragment();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Undefined Menu Position!", Toast.LENGTH_LONG).show();
-                    }
+        bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int position) {
+                Fragment selectedFragment = null;
+                if (position == 0) {
+                    selectedFragment = new MainMenu();
+                } else if (position == 1) {
+                    selectedFragment = new PendingOrderFragment();
+                } else if (position == 2) {
+                    selectedFragment = new ProfileFragment();
+                } else {
+                    Toast.makeText(MainActivity.this, "Undefined Menu Position!", Toast.LENGTH_LONG).show();
+                }
 
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.pager, selectedFragment);
+                transaction.commit();
+
+
+            }
+
+            @Override
+            public void onTabUnselected(int position) {
+
+            }
+
+            @Override
+            public void onTabReselected(int position) {
+                Fragment selectedFragment = null;
+                if (position == 0) {
+                    selectedFragment = new MainMenu();
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.pager, selectedFragment);
                     transaction.commit();
-
-
-                }
-
-                @Override
-                public void onTabUnselected(int position) {
-
-                }
-
-                @Override
-                public void onTabReselected(int position) {
-                    Fragment selectedFragment = null;
-                    if (position == 0) {
-                        selectedFragment = new MainMenu();
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.pager, selectedFragment);
-                        transaction.commit();
-                    } else {
+                } else {
 //                        Toast.makeText(MainActivity.this, "Undefined Menu Position!", Toast.LENGTH_LONG).show();
-                    }
-
-
-
                 }
-            });
+
+
+            }
+        });
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.pager, new MainMenu());
@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        saldo = "2";
         return true;
     }
 
@@ -116,11 +115,15 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this, "coba", Toast.LENGTH_SHORT).show();
-            saldo = "6";
-        }
-        if (id == R.id.logout) {
+            // setting
+        } else if (id == R.id.logout) {
             ShowConfirmLogout();
+        } else if (id == R.id.qrcode) {
+            ShowQrCode();
+        } else if (id == R.id.coin) {
+            ShowCoin();
+        } else {
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -161,6 +164,26 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    private void ShowQrCode() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.pager, new UserQRFragment());
+        transaction.commit();
+    }
+
+    private void ShowCoin() {
+        GetCoin();
+        Toast.makeText(this, "Saldo " + coin, Toast.LENGTH_LONG).show();
+
+    }
+
+    private void GetCoin() {
+
+        SharedPreferences pref = this.getSharedPreferences(Config.COIN, 0);
+        coin = pref.getString("COIN", "0");
+
+
     }
 
 

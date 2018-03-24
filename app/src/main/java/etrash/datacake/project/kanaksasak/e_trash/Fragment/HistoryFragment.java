@@ -1,5 +1,6 @@
 package etrash.datacake.project.kanaksasak.e_trash.Fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import etrash.datacake.project.kanaksasak.e_trash.Config;
 import etrash.datacake.project.kanaksasak.e_trash.R;
 
 
@@ -29,7 +31,8 @@ public class HistoryFragment extends Fragment {
 
     private static final String CLIENT_KEY = "SB-Mid-client-UQztUNrjlrcueE9C";
     //private static final String BASE_URL = "192.168.88.165:8080/payment";
-    private static final String BASE_URL = "http://7f914554.ngrok.io";
+    private String BASE_URL;
+    private String mURL;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,7 +41,7 @@ public class HistoryFragment extends Fragment {
                 R.layout.fragment_history, container, false);
 
         Button btn = rootView.findViewById(R.id.button2);
-
+        BASE_URL = mURL;
 
         SdkUIFlowBuilder.init()
                 .setClientKey(CLIENT_KEY) // client_key is mandatory
@@ -81,7 +84,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + "";
+                String timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + TimeUnit.MICROSECONDS.toMicros(System.currentTimeMillis()) + "";
                 String order = timeStamp;
                 TransactionRequest transactionRequest = new TransactionRequest(order, 14000);
 
@@ -139,6 +142,13 @@ public class HistoryFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void GetPref() {
+
+        SharedPreferences pref = this.getContext().getSharedPreferences(Config.URL, 0);
+        mURL = pref.getString("URL", "0");
+
     }
 
 }
